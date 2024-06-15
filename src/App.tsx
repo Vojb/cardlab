@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler, useRef, useState } from "react";
 import "./App.scss";
 import ShowCard, { Card } from "./components/show-card/show-card";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { toPng } from "html-to-image";
 export const fileToDataString = (file: File) => {
   return new Promise<string>((resolve, reject) => {
@@ -50,21 +50,24 @@ function App() {
 
   return (
     <div style={{ display: "flex" }} className="App">
-      <div>
+      <div style={{ flexDirection: "column", display: "flex", gap: 24 }}>
         <div ref={elementRef}>
           <ShowCard card={{ name: name, image: previewImgUrl }} />
         </div>
-        <button onClick={htmlToImageConvert}>Download Image</button>
+        <form>
+          Välj bild
+          <Button>
+            <input type="file" onChange={handleFileChange} accept="image/*" />
+          </Button>
+        </form>
         <TextField
           fullWidth
           value={name}
           onChange={(e) => setName(e.target.value.toUpperCase())}
         />
-        <div className="wrapper">
-          <form>
-            <input type="file" onChange={handleFileChange} accept="image/*" />
-          </form>
-        </div>
+        <Button type="button" variant="outlined" onClick={htmlToImageConvert}>
+          Ladda hem kort
+        </Button>
       </div>
     </div>
   );
