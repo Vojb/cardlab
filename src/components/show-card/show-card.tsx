@@ -11,6 +11,7 @@ export interface Team {
 }
 export interface Card {
   name?: string;
+  image: string;
   collectNumber?: string;
   team?: Team;
   origin?: string;
@@ -28,7 +29,7 @@ const ShowCard: React.FC<Props> = ({ card }) => {
 
       <div className={styles.cardRoot}>
         <div className={styles.cardPhoto}>
-          <img src={image}></img>
+          <img src={card?.image}></img>
         </div>
         <div
           className={styles.cardNameContainer}

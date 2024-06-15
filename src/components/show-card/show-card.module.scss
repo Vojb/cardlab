@@ -23,9 +23,10 @@
       img {
         display: flex;
         border: 4px solid black;
-        object-fit: contain;
+        object-fit: cover;
         margin-bottom: 6px;
         width: 210px;
+        height: 280px;
       }
     }
 
