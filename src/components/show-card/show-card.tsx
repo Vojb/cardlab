@@ -10,10 +10,10 @@ export interface Team {
   country?: string;
 }
 export interface Card {
-  name: string;
-  collectNumber: string;
-  team: Team;
-  origin: string;
+  name?: string;
+  collectNumber?: string;
+  team?: Team;
+  origin?: string;
 }
 
 interface Props {
