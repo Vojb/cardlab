@@ -5,10 +5,10 @@
   display: flex;
   .logo {
     position: absolute;
-    left: 24px;
+    left: 4px;
     top: 32px;
     img {
-      height: 50px;
+      height: 54px;
     }
   }
   .cardRoot {
@@ -19,12 +19,13 @@
     justify-content: space-between;
     flex-direction: column;
     .cardPhoto {
+      align-self: flex-end;
       img {
-        margin-left: 24px;
         display: flex;
         border: 4px solid black;
         object-fit: contain;
-        width: 202px;
+        margin-bottom: 6px;
+        width: 210px;
       }
     }
 
@@ -37,9 +38,8 @@
       align-content: center;
       background-color: #fbf5b3;
       span {
-        flex: 1;
-        text-align: center;
-        width: 100%;
+        font-size: large;
+        margin-top: 3px;
       }
     }
   }
