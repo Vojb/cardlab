@@ -1,0 +1,10 @@
+.rootLayout {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+
+  align-items: center;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
+}

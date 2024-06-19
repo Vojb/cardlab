@@ -21,17 +21,17 @@ const darkTheme = createTheme({
 const lightTheme = createTheme({
   palette: {
     primary: {
-      main: blueGrey[500],
+      main: blueGrey[800],
     },
     secondary: {
-      main: green[500],
+      main: green[400],
     },
     mode: "light",
   },
 });
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <App />
     </ThemeProvider>

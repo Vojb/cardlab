@@ -1,46 +1,66 @@
 .rootShowCard {
-  width: 250px;
-  height: 350px;
+  width: var(--card-width);
+  height: var(--card-height);
   background-color: #eceee0;
-  display: flex;
-  .logo {
-    position: absolute;
-    left: 4px;
-    top: 32px;
-    img {
-      height: 54px;
-    }
-  }
-  .cardRoot {
-    flex: 1 0 0;
-    min-height: 0;
+  position: relative;
+
+  .rootCard {
+    height: var(--card-height);
+    width: var(--card-width);
+    padding: 10px 12px;
     display: flex;
-    margin: 12px;
-    justify-content: space-between;
-    flex-direction: column;
-    .cardPhoto {
-      align-self: flex-end;
+    .logo {
+      position: absolute;
+      z-index: 2;
+      left: 22px;
+      top: 34px;
       img {
-        display: flex;
-        border: 4px solid black;
-        object-fit: cover;
-        margin-bottom: 6px;
-        width: 210px;
-        height: 280px;
+        height: 34px;
       }
     }
-
-    .cardNameContainer {
+    .cardRoot {
+      flex: 1 0 0;
+      min-height: 0;
       display: flex;
-      align-items: center;
-      border: 2px solid black;
-      height: 32px;
-      justify-content: center;
-      align-content: center;
-      background-color: #fbf5b3;
-      span {
-        font-size: large;
-        margin-top: 3px;
+      margin: 12px;
+      justify-content: space-between;
+      flex-direction: column;
+      .cardPhoto {
+        position: relative;
+        color: #2c2c2c;
+        text-align: center;
+        align-self: flex-end;
+        span {
+          position: absolute;
+          right: 20px;
+          bottom: 20px;
+          font-family: NimbusSantLotBold;
+          text-shadow: -1px 1px 0 #fbf5b2, 1px 1px 0 #fbf5b2, 1px -1px 0 #fbf5b2,
+            -1px -1px 0 #fbf5b2;
+        }
+        img {
+          display: flex;
+          border: 4px solid black;
+          object-fit: cover;
+          margin-bottom: 6px;
+          width: var(--image-width);
+          height: var(--image-height);
+        }
+      }
+
+      .cardNameContainer {
+        display: flex;
+        align-items: center;
+        border: 2px solid black;
+        height: 32px;
+        justify-content: center;
+        align-content: center;
+        color: black;
+        background-color: #fbf5b3;
+        span {
+          font-size: large;
+          margin-top: 3px;
+        }
       }
     }
   }
