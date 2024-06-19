@@ -12,7 +12,6 @@ export const FCMlogoSvg: React.FC = () => {
       <g clip-path="url(#clip0_234_17)">
         <mask
           id="mask0_234_17"
-          style="mask-type:luminance"
           maskUnits="userSpaceOnUse"
           x="0"
           y="0"
