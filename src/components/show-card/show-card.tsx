@@ -37,7 +37,7 @@ const ShowCard = forwardRef<HTMLDivElement, Props>(({ card }, ref) => {
 
           <div className={styles.cardRoot}>
             <div className={styles.cardPhoto}>
-              <span>{card?.position}</span>
+              <span>{card?.position?.toUpperCase()}</span>
 
               <img src={card?.image}></img>
             </div>
