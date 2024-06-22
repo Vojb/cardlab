@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useRef, useState } from "react";
+import React, { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import styles from "./customize-card.module.scss";
 import ShowCard, { Card, Team } from "../show-card/show-card";
 import { Button, Input, TextField } from "@mui/material";
@@ -6,6 +6,15 @@ import { toPng } from "html-to-image";
 import BacksideCard from "../backside-card/backside-card";
 import SmallCard from "../small-card/small-card";
 import JSZip from "jszip";
+import ReactCrop, { Crop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import { addData, deleteAllData, deleteData, getAllData } from "../indexedDb";
+interface DeckItem {
+  frontPng: string;
+  backPng: string;
+  cardData: Card;
+}
+
 export const fileToDataString = (file: File) => {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -14,6 +23,8 @@ export const fileToDataString = (file: File) => {
     reader.onload = () => resolve(reader.result as string);
   });
 };
+
+const LOCAL_STORAGE_KEY = "custom_cards_deck";
 
 interface Props {}
 
@@ -27,6 +38,10 @@ const CustomizeCard: React.FC<Props> = () => {
   const [description, setDescription] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImgUrl, setPreviewimgUrl] = useState("");
+  const [crop, setCrop] = useState<Crop>();
+  const [croppedImageUrl, setCroppedImageUrl] = useState("");
+  const [completedCrop, setCompletedCrop] = useState<Crop | null>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
   const [deck, setDeck] = useState<
     { frontPng: string; backPng: string; cardData: Card }[]
   >([]);
@@ -36,6 +51,43 @@ const CustomizeCard: React.FC<Props> = () => {
     country: "Sverige",
     division: "Division 5",
   });
+
+  const removeDuplicates = (data: DeckItem[]): DeckItem[] => {
+    const uniqueData = data.reduce((acc: DeckItem[], current: DeckItem) => {
+      const x = acc.find(
+        (item) => item.cardData.collectNumber === current.cardData.collectNumber
+      );
+      if (!x) {
+        return acc.concat([current]);
+      } else {
+        return acc;
+      }
+    }, []);
+    return uniqueData;
+  };
+  // Save deck to local storage whenever it changes
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllData();
+      const list: DeckItem[] = [];
+      const duplicates = new Set<string>();
+      console.log(data);
+      data.forEach(async (item) => {
+        if (!duplicates.has(item.value.cardData.collectNumber)) {
+          list.push(item.value);
+          duplicates.add(item.value.cardData.collectNumber);
+        } else {
+          // Remove duplicate from the database
+          await deleteData(item.key);
+        }
+      });
+
+      setDeck(list);
+    };
+
+    fetchData();
+  }, []);
 
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = async (
     event
@@ -55,11 +107,11 @@ const CustomizeCard: React.FC<Props> = () => {
 
   const addToDeck = () => {
     if (elementRef1.current) {
-      toPng(elementRef1.current, { pixelRatio: 10 })
+      toPng(elementRef1.current, { quality: 10, pixelRatio: 10 })
         .then((dataUrlBackside) => {
           if (elementRef.current) {
-            toPng(elementRef.current, { pixelRatio: 10 })
-              .then((dataUrl) => {
+            toPng(elementRef.current, { quality: 10, pixelRatio: 10 })
+              .then(async (dataUrl) => {
                 // Save PNG representation and card data to deck
                 const newCard: Card = {
                   name: name,
@@ -76,7 +128,7 @@ const CustomizeCard: React.FC<Props> = () => {
                 // Check if there's already a card with the same collectNumber in the deck
                 const existingIndex = deck.findIndex(
                   (item) =>
-                    item.cardData.collectNumber === newCard.collectNumber
+                    item?.cardData?.collectNumber === newCard?.collectNumber
                 );
 
                 if (existingIndex !== -1) {
@@ -109,6 +161,15 @@ const CustomizeCard: React.FC<Props> = () => {
                 setDescription("");
                 setSelectedImage(null);
                 setPreviewimgUrl("");
+                await addData({
+                  id: collectNumber,
+                  value: {
+                    frontPng: dataUrl,
+                    backPng: dataUrlBackside,
+                    cardData: newCard,
+                  },
+                });
+                const data = await getAllData();
               })
               .catch((err) => {
                 console.log(err);
@@ -120,6 +181,7 @@ const CustomizeCard: React.FC<Props> = () => {
         });
     }
   };
+
   const downloadAllAsZip = () => {
     const zip = new JSZip();
 
@@ -176,6 +238,7 @@ const CustomizeCard: React.FC<Props> = () => {
             />
           </Button>
         </div>
+
         <TextField
           fullWidth
           label="Position"
@@ -217,7 +280,9 @@ const CustomizeCard: React.FC<Props> = () => {
           variant="outlined"
           onClick={addToDeck}
         >
-          Lägg till
+          {deck.some((item) => item.cardData.collectNumber === collectNumber)
+            ? "Uppdatera"
+            : "Lägg till"}
         </Button>
       </div>
       <div className={styles.cardsContainer}>
@@ -262,14 +327,32 @@ const CustomizeCard: React.FC<Props> = () => {
             />
           ))}
         </div>
-        <Button
-          disabled={deck.length == 0}
-          type="button"
-          variant="outlined"
-          onClick={downloadAllAsZip}
-        >
-          Ladda hem kort
-        </Button>
+        <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
+          <Button
+            disabled={deck.length === 0}
+            type="button"
+            color="error"
+            variant="outlined"
+            onClick={async () => {
+              try {
+                await deleteAllData();
+                setDeck([]);
+              } catch (error) {
+                console.error("Error deleting all items:", error);
+              }
+            }}
+          >
+            Ta bort alla kort
+          </Button>
+          <Button
+            disabled={deck.length === 0}
+            type="button"
+            variant="outlined"
+            onClick={downloadAllAsZip}
+          >
+            Ladda hem kort
+          </Button>
+        </div>
       </div>
     </div>
   );

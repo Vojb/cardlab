@@ -3,6 +3,7 @@ import image from "../../assets/placeholder.png";
 import viteLogo from "../../assets/fcm.svg";
 import "../../assets/fonts/nimbusmonolot-regular.otf";
 import { forwardRef } from "react";
+
 export interface Team {
   name?: string;
   logoUrl?: string;
