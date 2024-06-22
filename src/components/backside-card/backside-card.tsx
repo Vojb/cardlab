@@ -16,7 +16,9 @@ const BacksideCard: React.FC<Props> = ({ card }) => {
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </div>
         <div className={styles.textContainer}>
-          <span className={styles.name}>{card.name}</span>
+          <span className={styles.name}>
+            {card?.name?.replace(/\b\w/g, (char) => char.toUpperCase())}
+          </span>
           <span className={styles.origin}>{card.origin}</span>
         </div>
         <div className={styles.collectNumber}>

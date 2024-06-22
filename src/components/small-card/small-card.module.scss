@@ -1,12 +1,12 @@
 .rootShowCard {
-  width: var(--card-width);
-  height: var(--card-height);
+  width: var(--small-card-width);
+  height: var(--small-card-height);
   background-color: #eceee0;
   position: relative;
 
   .rootCard {
-    height: var(--card-height);
-    width: var(--card-width);
+    height: var(--small-card-height);
+    width: var(--small-card-width);
     padding: 10px 12px;
     display: flex;
     .logo {
@@ -15,7 +15,7 @@
       left: 22px;
       top: 34px;
       img {
-        height: 34px;
+        height: 14px;
       }
     }
     .cardRoot {
@@ -43,8 +43,8 @@
           border: 4px solid black;
           object-fit: cover;
           margin-bottom: 6px;
-          width: var(--image-width);
-          height: var(--image-height);
+          width: var(--small-card-width);
+          height: var(--small-card-height);
         }
       }
 
@@ -58,7 +58,7 @@
         color: black;
         background-color: #fbf5b3;
         span {
-          font-size: 14px;
+          font-size: large;
           margin-top: 3px;
         }
       }

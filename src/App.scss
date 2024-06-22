@@ -24,4 +24,9 @@
 
   --image-width: 170px;
   --image-height: 230px;
+  /* Variables divided by 4 */
+  --small-card-width: 58px; /* 232px / 4 */
+  --small-card-height: 79px; /* 316px / 4 */
+  --small-image-width: 42.5px; /* 170px / 4 */
+  --small-image-height: 57.5px;
 }

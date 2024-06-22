@@ -1,6 +1,5 @@
 import styles from "./show-card.module.scss";
-import image from "../../assets/image.png";
-import fcm from "../../assets/fcm.png";
+import image from "../../assets/placeholder.png";
 import viteLogo from "../../assets/fcm.svg";
 import "../../assets/fonts/nimbusmonolot-regular.otf";
 import { forwardRef } from "react";
@@ -39,7 +38,7 @@ const ShowCard = forwardRef<HTMLDivElement, Props>(({ card }, ref) => {
             <div className={styles.cardPhoto}>
               <span>{card?.position?.toUpperCase()}</span>
 
-              <img src={card?.image}></img>
+              <img src={card?.image != "" ? card?.image : image}></img>
             </div>
             <div
               className={styles.cardNameContainer}
