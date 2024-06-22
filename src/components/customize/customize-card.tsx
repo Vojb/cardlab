@@ -1,9 +1,11 @@
 import React, { ChangeEventHandler, useRef, useState } from "react";
 import styles from "./customize-card.module.scss";
-import ShowCard, { Card } from "../show-card/show-card";
+import ShowCard, { Card, Team } from "../show-card/show-card";
 import { Button, Input, TextField } from "@mui/material";
-import { toJpeg, toPng, toSvg } from "html-to-image";
+import { toPng } from "html-to-image";
 import BacksideCard from "../backside-card/backside-card";
+import SmallCard from "../small-card/small-card";
+import JSZip from "jszip";
 export const fileToDataString = (file: File) => {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -12,18 +14,28 @@ export const fileToDataString = (file: File) => {
     reader.onload = () => resolve(reader.result as string);
   });
 };
+
 interface Props {}
+
 const CustomizeCard: React.FC<Props> = () => {
-  const elementRef = useRef<HTMLDivElement>(null); // Correct type for the ref
-  const elementRef1 = useRef<HTMLDivElement>(null); // Correct type for the ref
-  const [card, setCard] = useState<Card | null>(null); // Initial state as null
+  const elementRef = useRef<HTMLDivElement>(null);
+  const elementRef1 = useRef<HTMLDivElement>(null);
   const [name, setName] = useState("");
   const [position, setPosition] = useState("");
   const [origin, setOrigin] = useState("");
-  const [collectNumber, setCollectNumber] = useState("");
+  const [collectNumber, setCollectNumber] = useState("1");
   const [description, setDescription] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File>();
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImgUrl, setPreviewimgUrl] = useState("");
+  const [deck, setDeck] = useState<
+    { frontPng: string; backPng: string; cardData: Card }[]
+  >([]);
+  const [team, setTeam] = useState<Team>({
+    name: "FC Möllan",
+    origin: "Malmö",
+    country: "Sverige",
+    division: "Division 5",
+  });
 
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = async (
     event
@@ -40,47 +52,111 @@ const CustomizeCard: React.FC<Props> = () => {
       console.log(error);
     }
   };
-  const htmlToImageConvert = () => {
-    if (elementRef1.current) {
-      htmlToImageConvertB();
-    }
-    if (elementRef.current) {
-      toPng(elementRef.current, { pixelRatio: 10 })
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-          link.download = `${name
-            .replace(" ", "-")
-            .toLowerCase()}-frontside.png`;
-          link.href = dataUrl;
-          link.click();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
-  const htmlToImageConvertB = () => {
+
+  const addToDeck = () => {
     if (elementRef1.current) {
       toPng(elementRef1.current, { pixelRatio: 10 })
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-          link.download = `${name
-            .replace(" ", "-")
-            .toLowerCase()}-backside.png`;
-          link.href = dataUrl;
-          link.click();
+        .then((dataUrlBackside) => {
+          if (elementRef.current) {
+            toPng(elementRef.current, { pixelRatio: 10 })
+              .then((dataUrl) => {
+                // Save PNG representation and card data to deck
+                const newCard: Card = {
+                  name: name,
+                  image: previewImgUrl,
+                  collectNumber: collectNumber,
+                  origin: origin,
+                  description: description,
+                  position: position,
+                  team: team,
+                };
+                setName("");
+                setPosition("");
+                setOrigin("");
+                // Check if there's already a card with the same collectNumber in the deck
+                const existingIndex = deck.findIndex(
+                  (item) =>
+                    item.cardData.collectNumber === newCard.collectNumber
+                );
+
+                if (existingIndex !== -1) {
+                  // Update the existing card with the new data
+                  const updatedDeck = [...deck];
+                  updatedDeck[existingIndex] = {
+                    frontPng: dataUrl,
+                    backPng: dataUrlBackside,
+                    cardData: newCard,
+                  };
+                  setDeck(updatedDeck);
+                } else {
+                  // Add the new card to the deck
+                  setDeck([
+                    ...deck,
+                    {
+                      frontPng: dataUrl,
+                      backPng: dataUrlBackside,
+                      cardData: newCard,
+                    },
+                  ]);
+                }
+                setCollectNumber(
+                  String(
+                    Number.isNaN(Number(collectNumber))
+                      ? 1
+                      : Number(collectNumber) + 1
+                  )
+                );
+                setDescription("");
+                setSelectedImage(null);
+                setPreviewimgUrl("");
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     }
   };
+  const downloadAllAsZip = () => {
+    const zip = new JSZip();
+
+    // Create folders for fronts and backs
+    const frontFolder = zip.folder("card-frontsides");
+    const backFolder = zip.folder("card-backsides");
+
+    // Add each card PNG to the respective folder in the zip file
+    deck.forEach((item, index) => {
+      frontFolder?.file(
+        `card-${item.cardData.collectNumber}-front.png`,
+        item.frontPng.split("data:image/png;base64,")[1],
+        { base64: true }
+      );
+      backFolder?.file(
+        `card-${item.cardData.collectNumber}-back.png`,
+        item.backPng.split("data:image/png;base64,")[1],
+        { base64: true }
+      );
+    });
+
+    // Generate the zip file and trigger download
+    zip.generateAsync({ type: "blob" }).then(function (content) {
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(content);
+      link.download = "cards.zip";
+      link.click();
+    });
+  };
+
   return (
     <div className={styles.rootLayout}>
       <ShowCard
         ref={elementRef}
         card={{
-          position: position != "" ? position : "MV",
+          position: position !== "" ? position : "MV",
           name: name,
           image: previewImgUrl,
         }}
@@ -88,18 +164,13 @@ const CustomizeCard: React.FC<Props> = () => {
       <div ref={elementRef1}>
         <BacksideCard
           card={{
-            name: name != "" ? name : "Spelarens namn",
+            name: name !== "" ? name : "Spelarens namn",
             image: previewImgUrl,
-            collectNumber: collectNumber != "" ? collectNumber : "1",
-            origin: origin != "" ? origin : "Malmö",
-            team: {
-              name: "FC Möllan",
-              origin: "Malmö",
-              country: "Sverige",
-              division: "Division 5",
-            },
+            collectNumber: collectNumber !== "" ? collectNumber : "1",
+            origin: origin !== "" ? origin : "Malmö",
+            team: team,
             description:
-              description != "" ? description : "En beskrivande text",
+              description !== "" ? description : "En beskrivande text",
           }}
         />
       </div>
@@ -161,13 +232,40 @@ const CustomizeCard: React.FC<Props> = () => {
           onChange={(e) => setDescription(e.target.value)}
         />
         <Button
-          disabled={previewImgUrl == ""}
+          disabled={previewImgUrl === ""}
           type="button"
           variant="outlined"
-          onClick={htmlToImageConvert}
+          onClick={addToDeck}
+        >
+          Lägg till
+        </Button>
+        <Button
+          disabled={deck.length == 0}
+          type="button"
+          variant="outlined"
+          onClick={downloadAllAsZip}
         >
           Ladda hem kort
         </Button>
+      </div>
+      <div className={styles.deck}>
+        {deck.map((item, index) => (
+          <SmallCard
+            key={index}
+            png={item.frontPng}
+            cardData={item.cardData}
+            onClick={(card) => {
+              if (card != null) {
+                setPosition(card.position ?? "");
+                setOrigin(card.origin ?? "");
+                setCollectNumber(card.collectNumber ?? "");
+                setDescription(card.description ?? "");
+                setPreviewimgUrl(card.image);
+                setName(card.name ?? "");
+              }
+            }}
+          />
+        ))}
       </div>
     </div>
   );
