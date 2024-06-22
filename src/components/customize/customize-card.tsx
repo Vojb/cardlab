@@ -153,32 +153,12 @@ const CustomizeCard: React.FC<Props> = () => {
 
   return (
     <div className={styles.rootLayout}>
-      <ShowCard
-        ref={elementRef}
-        card={{
-          position: position !== "" ? position : "MV",
-          name: name,
-          image: previewImgUrl,
-        }}
-      />
-      <div ref={elementRef1}>
-        <BacksideCard
-          card={{
-            name: name !== "" ? name : "Spelarens namn",
-            image: previewImgUrl,
-            collectNumber: collectNumber !== "" ? collectNumber : "1",
-            origin: origin !== "" ? origin : "Malmö",
-            team: team,
-            description:
-              description !== "" ? description : "En beskrivande text",
-          }}
-        />
-      </div>
       <div
         style={{
           flexDirection: "column",
           display: "flex",
           gap: 24,
+          width: "100%",
           padding: 24,
           border: "1px solid black",
         }}
@@ -239,6 +219,49 @@ const CustomizeCard: React.FC<Props> = () => {
         >
           Lägg till
         </Button>
+      </div>
+      <div className={styles.cardsContainer}>
+        <ShowCard
+          ref={elementRef}
+          card={{
+            position: position !== "" ? position : "MV",
+            name: name,
+            image: previewImgUrl,
+          }}
+        />
+        <div ref={elementRef1}>
+          <BacksideCard
+            card={{
+              name: name !== "" ? name : "Spelarens namn",
+              image: previewImgUrl,
+              collectNumber: collectNumber !== "" ? collectNumber : "1",
+              origin: origin !== "" ? origin : "Malmö",
+              team: team,
+              description:
+                description !== "" ? description : "En beskrivande text",
+            }}
+          />
+        </div>
+        <div className={styles.deck}>
+          {deck.map((item, index) => (
+            <SmallCard
+              selected={item.cardData.collectNumber == collectNumber}
+              key={index}
+              png={item.frontPng}
+              cardData={item.cardData}
+              onClick={(card) => {
+                if (card != null) {
+                  setPosition(card.position ?? "");
+                  setOrigin(card.origin ?? "");
+                  setCollectNumber(card.collectNumber ?? "");
+                  setDescription(card.description ?? "");
+                  setPreviewimgUrl(card.image);
+                  setName(card.name ?? "");
+                }
+              }}
+            />
+          ))}
+        </div>
         <Button
           disabled={deck.length == 0}
           type="button"
@@ -247,25 +270,6 @@ const CustomizeCard: React.FC<Props> = () => {
         >
           Ladda hem kort
         </Button>
-      </div>
-      <div className={styles.deck}>
-        {deck.map((item, index) => (
-          <SmallCard
-            key={index}
-            png={item.frontPng}
-            cardData={item.cardData}
-            onClick={(card) => {
-              if (card != null) {
-                setPosition(card.position ?? "");
-                setOrigin(card.origin ?? "");
-                setCollectNumber(card.collectNumber ?? "");
-                setDescription(card.description ?? "");
-                setPreviewimgUrl(card.image);
-                setName(card.name ?? "");
-              }
-            }}
-          />
-        ))}
       </div>
     </div>
   );
