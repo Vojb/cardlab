@@ -6,6 +6,10 @@ import blueGrey from "@mui/material/colors/blueGrey";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import CssBaseline from "@mui/material/CssBaseline/CssBaseline";
 import App from "./App";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import CreateCardPage from "./pages/create-card.page";
+import HomePage from "./pages/home.page";
+import CreateTeamPage from "./pages/create-team.page";
 
 const darkTheme = createTheme({
   palette: {
@@ -29,11 +33,31 @@ const lightTheme = createTheme({
     mode: "light",
   },
 });
+
+const router = createBrowserRouter([
+  // {
+  //   path: "/",
+  //   element: <Login />,
+  // },
+  {
+    path: "/",
+    element: <CreateCardPage></CreateCardPage>,
+  },
+  {
+    path: "create-card",
+    element: <CreateCardPage></CreateCardPage>,
+  },
+  {
+    path: "create-team",
+    element: <CreateTeamPage></CreateTeamPage>,
+  },
+]);
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <App />
+      <RouterProvider router={router} />
     </ThemeProvider>
   </React.StrictMode>
 );
