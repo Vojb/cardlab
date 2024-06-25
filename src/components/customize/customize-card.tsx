@@ -2,7 +2,13 @@ import React, { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import styles from "./customize-card.module.scss";
 import ShowCard, { Card, Team } from "../show-card/show-card";
 import "../../App.scss";
-import { Button, IconButton, Input, TextField } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Input,
+  TextField,
+  TextareaAutosize,
+} from "@mui/material";
 import { toPng } from "html-to-image";
 import BacksideCard from "../backside-card/backside-card";
 import SmallCard from "../small-card/small-card";
@@ -275,11 +281,8 @@ const CustomizeCard: React.FC<Props> = () => {
             onChange={(e) => setCollectNumber(e.target.value)}
           />
           <div style={{ display: "flex", gap: 24, flexDirection: "row" }}>
-            <TextField
-              fullWidth
-              label="Beskrivning"
+            <textarea
               value={description}
-              variant="filled"
               onChange={(e) => setDescription(e.target.value)}
             />
             <IconButton

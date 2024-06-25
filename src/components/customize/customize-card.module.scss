@@ -7,6 +7,21 @@
     flex-direction: column;
   }
 }
+textarea {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  resize: none;
+  background-color: #2d2d2d;
+  border: none;
+  border-bottom: 1px solid white;
+  height: 5rem;
+  width: 100%;
+  overflow: hidden;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: white;
+}
 .deck {
   display: grid;
   max-height: 14rem;

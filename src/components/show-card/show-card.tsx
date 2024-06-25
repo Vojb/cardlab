@@ -41,10 +41,7 @@ const ShowCard = forwardRef<HTMLDivElement, Props>(({ card }, ref) => {
 
               <img src={card?.image != "" ? card?.image : image}></img>
             </div>
-            <div
-              className={styles.cardNameContainer}
-              style={{ fontFamily: "NimbusMonolotBold" }}
-            >
+            <div className={styles.cardNameContainer}>
               <span>{card?.name?.toUpperCase()}</span>
             </div>
           </div>
