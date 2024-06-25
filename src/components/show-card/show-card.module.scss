@@ -12,10 +12,10 @@
     .logo {
       position: absolute;
       z-index: 2;
-      left: 22px;
+      left: 20px;
       top: 34px;
       img {
-        height: 34px;
+        height: 44px;
       }
     }
     .cardRoot {
@@ -30,17 +30,16 @@
         color: #2c2c2c;
         text-align: center;
         align-self: flex-end;
+
         span {
           position: absolute;
-          right: 20px;
-          bottom: 20px;
-          font-family: NimbusSantLotBold;
-          text-shadow: -1px 1px 0 #fbf5b2, 1px 1px 0 #fbf5b2, 1px -1px 0 #fbf5b2,
-            -1px -1px 0 #fbf5b2;
+          right: 12px;
+          font-size: 14px;
+          bottom: 12px;
         }
         img {
           display: flex;
-          border: 4px solid black;
+          border: 4px solid #100e09;
           object-fit: cover;
           margin-bottom: 6px;
           width: var(--image-width);
@@ -51,15 +50,17 @@
       .cardNameContainer {
         display: flex;
         align-items: center;
-        border: 2px solid black;
-        height: 32px;
+        border: 0.15rem solid #100e09;
+        height: 24px;
         justify-content: center;
         align-content: center;
-        color: black;
+        color: #100e09;
         background-color: #fbf5b3;
         span {
+          text-align: center;
+          width: 100%;
+          font-weight: 600;
           font-size: 14px;
-          margin-top: 3px;
         }
       }
     }

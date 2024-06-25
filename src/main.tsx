@@ -10,6 +10,9 @@ import CreateCardPage from "./pages/create-card.page";
 import CreateTeamPage from "./pages/create-team.page";
 import "./App.scss";
 const darkTheme = createTheme({
+  typography: {
+    fontFamily: ["Nunito Sans", "sans-serif"].join(","),
+  },
   palette: {
     primary: {
       main: blueGrey[500],
@@ -21,6 +24,9 @@ const darkTheme = createTheme({
   },
 });
 const lightTheme = createTheme({
+  typography: {
+    fontFamily: ["Nunito Sans", "sans-serif"].join(","),
+  },
   palette: {
     primary: {
       main: blueGrey[800],

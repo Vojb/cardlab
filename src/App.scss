@@ -1,24 +1,7 @@
-@font-face {
-  font-family: "NimbusMonolot";
-  src: local("NimbusMonolot-Regular"),
-    url("./assets/fonts/nimbusmonolot-regular.otf");
-}
-@font-face {
-  font-family: "NimbusMonolotBold";
-  src: local("NimbusMonolot-Bold"), url("./assets/fonts/nimbusmonolot-bold.otf");
-}
-@font-face {
-  font-family: "NimbusSantLotBold";
-  src: local("NimbusSantLot-Bold"), url("./assets/fonts/nimbussanslot-bold.otf");
-}
-@font-face {
-  font-family: "NimbusSantLot";
-  src: local("NimbusSantLot"), url("./assets/fonts/nimbussanslot-regular.otf");
-}
 .input {
 }
 body {
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   color: red;
 }
 :root {
@@ -26,7 +9,7 @@ body {
   --card-height: 316px;
 
   --image-width: 170px;
-  --image-height: 230px;
+  --image-height: 242px;
   /* Variables divided by 4 */
   --small-card-width: 58px; /* 232px / 4 */
   --small-card-height: 79px; /* 316px / 4 */
