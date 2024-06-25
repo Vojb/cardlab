@@ -5,12 +5,10 @@ import green from "@mui/material/colors/green";
 import blueGrey from "@mui/material/colors/blueGrey";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import CssBaseline from "@mui/material/CssBaseline/CssBaseline";
-import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CreateCardPage from "./pages/create-card.page";
-import HomePage from "./pages/home.page";
 import CreateTeamPage from "./pages/create-team.page";
-
+import "./App.scss";
 const darkTheme = createTheme({
   palette: {
     primary: {

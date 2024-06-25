@@ -23,11 +23,10 @@ export const initDB = async () => {
   });
 };
 
-// Card Store Operations
 export const addCard = async (data: any) => {
   const db = await initDB();
   const tx = db.transaction(CARD_STORE, "readwrite");
-  await tx.store.add(data);
+  await tx.store.put(data);
   await tx.done;
 };
 
@@ -54,8 +53,9 @@ export const getAllCards = async () => {
 // Team Store Operations
 export const addTeam = async (data: any) => {
   const db = await initDB();
+
   const tx = db.transaction(TEAM_STORE, "readwrite");
-  await tx.store.add(data);
+  await tx.store.put(data);
   await tx.done;
 };
 

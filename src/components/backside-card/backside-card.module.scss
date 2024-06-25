@@ -8,7 +8,6 @@
     align-self: center;
     height: 100%;
     color: #514847;
-    font-family: NimbusSantLotRegular;
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
@@ -26,7 +25,6 @@
         font-size: 14px;
         height: 20px;
         color: #514847;
-        font-family: NimbusSantLotBold;
         font-weight: bold;
       }
       .origin {
@@ -36,7 +34,6 @@
     .collectNumber {
       margin-top: 10px;
       font-size: 10px;
-      font-family: NimbusSantLotBold;
       font-weight: bold;
     }
     .descriptionContainer {
@@ -44,7 +41,6 @@
       align-content: flex-start;
       flex: 1 0 0;
       .clublocation {
-        font-family: NimbusSantLotBold;
         font-size: 8px;
         text-align: justify;
         width: 100%;
@@ -57,7 +53,7 @@
         min-height: calc(1em * 6);
         max-height: calc(9em * 9); // 5 lines with the current font size
         font-size: 8px;
-        font-family: NimbusSantLotRegular;
+
         border-bottom: 0.5px solid #514847;
         display: -webkit-box;
         -webkit-line-clamp: 8;
@@ -81,7 +77,6 @@
       align-content: center;
       align-items: center;
       .clubName {
-        font-family: NimbusSantLotBold;
         font-weight: bold;
         font-size: 10px;
         height: 12px;

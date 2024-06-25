@@ -1,6 +1,6 @@
 import styles from "./show-card.module.scss";
 import image from "../../assets/placeholder.png";
-import viteLogo from "../../assets/fcm.svg";
+import viteLogo from "../../assets/fcm.png";
 import "../../assets/fonts/nimbusmonolot-regular.otf";
 import { forwardRef } from "react";
 

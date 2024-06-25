@@ -1,14 +1,8 @@
 import React, { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import styles from "./customize-card.module.scss";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import ShowCard, { Card, Team } from "../show-card/show-card";
-import {
-  Button,
-  ButtonGroup,
-  IconButton,
-  Input,
-  TextField,
-} from "@mui/material";
+import "../../App.scss";
+import { Button, IconButton, Input, TextField } from "@mui/material";
 import { toPng } from "html-to-image";
 import BacksideCard from "../backside-card/backside-card";
 import SmallCard from "../small-card/small-card";
@@ -31,8 +25,6 @@ export const fileToDataString = (file: File) => {
     reader.onload = () => resolve(reader.result as string);
   });
 };
-
-const LOCAL_STORAGE_KEY = "custom_cards_deck";
 
 interface Props {}
 
@@ -58,8 +50,6 @@ const CustomizeCard: React.FC<Props> = () => {
     division: "Division 5",
   });
 
-  // Save deck to local storage whenever it changes
-
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllCards();
@@ -70,7 +60,6 @@ const CustomizeCard: React.FC<Props> = () => {
           list.push(item.value);
           duplicates.add(item.value.cardData.collectNumber);
         } else {
-          // Remove duplicate from the database
           await deleteCard(item.key);
         }
       });
@@ -97,76 +86,106 @@ const CustomizeCard: React.FC<Props> = () => {
     }
   };
 
-  const addToDeck = () => {
-    if (elementRef1.current) {
-      toPng(elementRef1.current, { quality: 10, pixelRatio: 10 })
-        .then((dataUrlBackside) => {
-          if (elementRef.current) {
-            toPng(elementRef.current, { quality: 10, pixelRatio: 10 })
-              .then(async (dataUrl) => {
-                const newCard: Card = {
-                  name: name,
-                  image: previewImgUrl,
-                  collectNumber: collectNumber,
-                  origin: origin,
-                  description: description,
-                  position: position,
-                  team: team,
-                };
-                setName("");
-                setPosition("");
-                setOrigin("");
-                const existingIndex = deck.findIndex(
-                  (item) =>
-                    item?.cardData?.collectNumber === newCard?.collectNumber
-                );
+  const generatePngs = async () => {
+    try {
+      if (elementRef.current) {
+        const tasks = [
+          toPng(elementRef.current, { quality: 10, pixelRatio: 10 }),
+          toPng(elementRef.current, { quality: 10, pixelRatio: 10 }),
+          toPng(elementRef.current, { quality: 10, pixelRatio: 10 }),
+          toPng(elementRef.current, { quality: 10, pixelRatio: 10 }),
+        ];
 
-                if (existingIndex !== -1) {
-                  const updatedDeck = [...deck];
-                  updatedDeck[existingIndex] = {
-                    frontPng: dataUrl,
-                    backPng: dataUrlBackside,
-                    cardData: newCard,
+        if (elementRef1.current) {
+          tasks.push(
+            toPng(elementRef1.current, { quality: 10, pixelRatio: 10 }),
+            toPng(elementRef1.current, { quality: 10, pixelRatio: 10 }),
+            toPng(elementRef1.current, { quality: 10, pixelRatio: 10 }),
+            toPng(elementRef1.current, { quality: 10, pixelRatio: 10 })
+          );
+        }
+
+        await Promise.all(tasks);
+
+        console.log("All PNGs have been generated.");
+      }
+    } catch (error) {
+      console.error("Error generating PNGs:", error);
+    }
+  };
+
+  const addToDeck = () => {
+    generatePngs().then(() => {
+      if (elementRef1.current) {
+        toPng(elementRef1.current, { quality: 10, pixelRatio: 10 })
+          .then((dataUrlBackside) => {
+            if (elementRef.current) {
+              toPng(elementRef.current, { quality: 10, pixelRatio: 10 })
+                .then(async (dataUrl) => {
+                  const newCard: Card = {
+                    name: name,
+                    image: previewImgUrl,
+                    collectNumber: collectNumber,
+                    origin: origin,
+                    description: description,
+                    position: position,
+                    team: team,
                   };
-                  setDeck(updatedDeck);
-                } else {
-                  setDeck([
-                    ...deck,
-                    {
+                  setName("");
+                  setPosition("");
+                  setOrigin("");
+                  const existingIndex = deck.findIndex(
+                    (item) =>
+                      item?.cardData?.collectNumber === newCard?.collectNumber
+                  );
+
+                  if (existingIndex !== -1) {
+                    const updatedDeck = [...deck];
+                    updatedDeck[existingIndex] = {
+                      frontPng: dataUrl,
+                      backPng: dataUrlBackside,
+                      cardData: newCard,
+                    };
+                    setDeck(updatedDeck);
+                  } else {
+                    setDeck([
+                      ...deck,
+                      {
+                        frontPng: dataUrl,
+                        backPng: dataUrlBackside,
+                        cardData: newCard,
+                      },
+                    ]);
+                  }
+                  setCollectNumber(
+                    String(
+                      Number.isNaN(Number(collectNumber))
+                        ? 1
+                        : Number(collectNumber) + 1
+                    )
+                  );
+                  setDescription("");
+                  setSelectedImage(null);
+                  setPreviewimgUrl("");
+                  await addCard({
+                    id: collectNumber,
+                    value: {
                       frontPng: dataUrl,
                       backPng: dataUrlBackside,
                       cardData: newCard,
                     },
-                  ]);
-                }
-                setCollectNumber(
-                  String(
-                    Number.isNaN(Number(collectNumber))
-                      ? 1
-                      : Number(collectNumber) + 1
-                  )
-                );
-                setDescription("");
-                setSelectedImage(null);
-                setPreviewimgUrl("");
-                await addCard({
-                  id: collectNumber,
-                  value: {
-                    frontPng: dataUrl,
-                    backPng: dataUrlBackside,
-                    cardData: newCard,
-                  },
+                  });
+                })
+                .catch((err) => {
+                  console.log(err);
                 });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
   };
 
   const downloadAllAsZip = () => {
