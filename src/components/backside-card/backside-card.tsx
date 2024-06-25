@@ -1,7 +1,7 @@
 import styles from "./backside-card.module.scss";
 import image from "../../assets/image.png";
 import fcm from "../../assets/fcm.png";
-import viteLogo from "../../assets/sass.svg";
+import viteLogo from "../../assets/fcmdark.png";
 import "../../assets/fonts/nimbusmonolot-regular.otf";
 import { Card } from "../show-card/show-card";
 

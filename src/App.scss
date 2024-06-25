@@ -17,7 +17,10 @@
 }
 .input {
 }
-
+body {
+  font-family: "Noto Sans", sans-serif;
+  color: red;
+}
 :root {
   --card-width: 232px;
   --card-height: 316px;

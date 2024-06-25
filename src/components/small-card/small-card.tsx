@@ -19,7 +19,7 @@ const SmallCard: React.FC<SmallCardProps> = ({
   return (
     <img
       onClick={() => onClick(cardData)}
-      style={{ height: "80px" }}
+      style={{ height: "100px" }}
       src={png}
       alt={cardData.name}
       className={selected ? styles.cardImage : ""}
