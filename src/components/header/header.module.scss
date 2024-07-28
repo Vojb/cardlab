@@ -1,0 +1,77 @@
+.headerRoot {
+  display: flex;
+  flex-direction: row;
+  padding: 12px;
+  background-color: white;
+  justify-content: space-between;
+  min-height: 0;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  .logoWrapper {
+    display: flex;
+    min-height: 0;
+    flex: 1 0 0;
+    align-self: center;
+    align-content: center;
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.menuToggleButton {
+  align-self: center;
+  background: none;
+  display: flex;
+  border: none;
+  color: white;
+  box-sizing: border-box;
+  flex: 0 0 30px;
+  height: 30px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: -6px;
+  position: relative;
+
+  &[data-visible="false"]:not([data-open="true"]) {
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &[data-open="true"] {
+    .toggleBar {
+      &:first-child {
+        transform: translateY(0) rotate(45deg);
+      }
+
+      &:last-child {
+        transform: translateY(0) rotate(-45deg);
+      }
+    }
+  }
+
+  .toggleBar {
+    width: 16px;
+    height: 1.5px;
+    background-color: red;
+
+    position: absolute;
+    transition-property: transform;
+    transition-duration: 0.25s;
+    transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+
+    &:first-child {
+      transform: translateY(-3.5px);
+    }
+
+    &:last-child {
+      transform: translateY(3.5px);
+    }
+  }
+}

@@ -9,6 +9,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CreateCardPage from "./pages/create-card.page";
 import CreateTeamPage from "./pages/create-team.page";
 import "./App.scss";
+import HomePage from "./pages/home.page";
+import { purple } from "@mui/material/colors";
+import RootLayout from "./layouts/root-layout";
 const darkTheme = createTheme({
   typography: {
     fontFamily: ["Nunito Sans", "sans-serif"].join(","),
@@ -29,10 +32,12 @@ const lightTheme = createTheme({
   },
   palette: {
     primary: {
-      main: blueGrey[800],
+      main: "#A882DD",
+      light: "#8667b3",
+      dark: "#c59bff",
     },
     secondary: {
-      main: green[400],
+      main: "#BCDCC4",
     },
     mode: "light",
   },
@@ -45,21 +50,27 @@ const router = createBrowserRouter([
   // },
   {
     path: "/",
-    element: <CreateCardPage></CreateCardPage>,
-  },
-  {
-    path: "create-card",
-    element: <CreateCardPage></CreateCardPage>,
-  },
-  {
-    path: "create-team",
-    element: <CreateTeamPage></CreateTeamPage>,
+    element: <RootLayout></RootLayout>,
+    children: [
+      {
+        path: "",
+        element: <HomePage></HomePage>,
+      },
+      {
+        path: "create-card",
+        element: <CreateCardPage></CreateCardPage>,
+      },
+      {
+        path: "create-team",
+        element: <CreateTeamPage></CreateTeamPage>,
+      },
+    ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={lightTheme}>
       <CssBaseline />
       <RouterProvider router={router} />
     </ThemeProvider>
