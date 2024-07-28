@@ -1,0 +1,11 @@
+.rootLayout {
+}
+.teams {
+  display: grid;
+  max-height: 14rem;
+  gap: 10px;
+  width: 100%;
+  grid-column: span 2;
+  overflow-y: scroll;
+  grid-template-columns: auto auto auto auto auto auto auto;
+}

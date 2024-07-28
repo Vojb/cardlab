@@ -1,13 +1,28 @@
-.homeRoot {
+.homePageRoot {
   display: flex;
-  flex: 1 0 0;
-}
-.teams {
-  display: grid;
-  max-height: 14rem;
-  gap: 10px;
-  width: 100%;
-  grid-column: span 2;
-  overflow-y: scroll;
-  grid-template-columns: auto auto auto auto auto auto auto;
+  flex-direction: column;
+  min-height: 0;
+
+  .hero {
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    @media screen and (min-width: 1060px) {
+      height: 800px;
+      width: "100%";
+      background-size: cover;
+    }
+    @media screen and (max-width: 560px) {
+      height: 200px;
+      background-size: cover;
+    }
+  }
+  .carousel {
+    height: 300px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    gap: 24px;
+    margin: 24px;
+  }
 }

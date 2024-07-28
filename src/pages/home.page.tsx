@@ -1,30 +1,46 @@
-import { Button, Menu, MenuItem, Stack } from "@mui/material";
+import { Button, Card, Menu, MenuItem, Stack } from "@mui/material";
 import "../App.scss";
 import styles from "./home.module.scss";
-import React, { useEffect } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { initDB } from "../components/indexedDb";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import Header from "../components/header/header";
+import heroBg from "../assets/hero.png";
+import BasicCard from "../components/basic-card-info";
 const HomePage = () => {
-  const navigate = useNavigate();
   useEffect(() => {
     initDB();
   }, []);
   return (
-    <div className={styles.homeRoot}>
-      <Button
-        onClick={() => {
-          navigate("/create-team");
+    <div className={styles.homePageRoot}>
+      <div
+        className={styles.hero}
+        style={{
+          backgroundImage: `url(${heroBg})`,
         }}
-      >
-        Skapa lag
-      </Button>
-      <Button
-        onClick={() => {
-          navigate("/create-card");
-        }}
-      >
-        Skapa kort
-      </Button>
+      ></div>
+      <div className={styles.carousel}>
+        <BasicCard
+          title={"HÖG KVALITET"}
+          body={
+            "Vi samarbetar med lokala svenska tryckerier för att kunna erbjuda den bästa kvaliteten "
+          }
+        ></BasicCard>
+        <BasicCard
+          title={"UNIKA"}
+          body={
+            "Stick ut med en retro look eller välj en mer modern design. Flera val för att du skall kunna skapa samlarkort som passar just er!"
+          }
+          buttonText="Läs mer"
+        ></BasicCard>
+
+        <BasicCard
+          title={"MAGISK HJÄLP AV AI"}
+          body={
+            "Slipp att skriva in beskrivande texter manuellt om varje spelare. Välj några nyckelord som passar spelaren så hjälper vår assistent dig med resten"
+          }
+        ></BasicCard>
+      </div>
     </div>
   );
 };

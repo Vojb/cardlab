@@ -235,7 +235,6 @@ const CustomizeCard: React.FC<Props> = () => {
             gap: 24,
             width: "100%",
             padding: 24,
-            border: "1px solid black",
           }}
         >
           <div style={{ display: "flex" }}>
