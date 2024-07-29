@@ -1,7 +1,7 @@
 import { KortLabbetLogo } from "../../assets/svg/kortlabbet-logo";
 import styles from "./header.module.scss";
 import Menu, { menuItems } from "../meny/menu";
-import { Link, ListItemText } from "@mui/material";
+import { Button, Link, ListItemText } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
@@ -27,6 +27,9 @@ const Header = () => {
             />
           );
         })}
+      </div>
+      <div className={styles.menu}>
+        <Button variant="contained">Köp</Button>
       </div>
     </nav>
   );
