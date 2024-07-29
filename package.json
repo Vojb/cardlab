@@ -9,13 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@fontsource/inter": "^5.0.19",
     "@mui/icons-material": "^5.15.7",
+    "@mui/joy": "^5.0.0-beta.48",
+    "@mui/material": "^5.15.7",
     "@radix-ui/react-use-size": "^1.0.1",
     "@radix-ui/themes": "^2.0.3",
-    "react-remove-scroll": "^2.5.7",
-    "@mui/material": "^5.15.7",
     "dom-to-image": "^2.6.0",
     "dotenv": "^16.4.5",
     "html-to-image": "^1.11.11",
@@ -26,6 +27,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.3.0",
     "react-image-crop": "^11.0.5",
+    "react-remove-scroll": "^2.5.7",
     "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
