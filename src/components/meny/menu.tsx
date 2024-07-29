@@ -1,33 +1,37 @@
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { Box, Button, Drawer, IconButton, MenuPaper } from "@mui/material";
+import { Box, Drawer, IconButton } from "@mui/material";
 import React from "react";
-import styles from "../header/header.module.scss";
 import {
+  CardGiftcard,
   DraftsRounded,
   FormatQuoteSharp,
   Home,
   MenuTwoTone,
+  Terminal,
 } from "@mui/icons-material";
-const menuItems = [
-  { text: "Hem", icon: <Home /> },
-  { text: "Om oss", icon: <MailIcon /> },
-  { text: "FAQ", icon: <FormatQuoteSharp /> },
-  { text: "Kontakt", icon: <DraftsRounded /> },
+import { useNavigate } from "react-router-dom";
+
+export const menuItems = [
+  { text: "Hem", icon: <Home />, navigate: "/" },
+  { text: "Skapa kort", icon: <CardGiftcard />, navigate: "/create-card" },
+  { text: "Skapa lag", icon: <Terminal />, navigate: "/create-team" },
+  { text: "Om oss", icon: <MailIcon />, navigate: "/" },
+  { text: "FAQ", icon: <FormatQuoteSharp />, navigate: "/" },
+  { text: "Kontakt", icon: <DraftsRounded />, navigate: "/" },
 ];
+
 const Menu = () => {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-
+  const navigate = useNavigate();
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
@@ -35,7 +39,10 @@ const Menu = () => {
           <ListItem key={item.text} disablePadding>
             <ListItemButton>
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+              <ListItemText
+                primary={item.text}
+                onClick={() => navigate(item.navigate)}
+              />
             </ListItemButton>
           </ListItem>
         ))}

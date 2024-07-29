@@ -13,7 +13,7 @@ interface Props {
 }
 const BasicCard = ({ title, body, buttonText = "" }: Props) => {
   return (
-    <Card sx={{ width: 375 }}>
+    <Card sx={{ width: 375, minHeight: 150 }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {title}

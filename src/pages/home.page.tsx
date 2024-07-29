@@ -31,7 +31,7 @@ const HomePage = () => {
           body={
             "Stick ut med en retro look eller välj en mer modern design. Flera val för att du skall kunna skapa samlarkort som passar just er!"
           }
-          buttonText="Läs mer"
+          buttonText="Mer info"
         ></BasicCard>
 
         <BasicCard

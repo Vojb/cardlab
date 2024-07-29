@@ -22,7 +22,21 @@
     }
   }
 }
-
+.drawerMobile {
+  display: none;
+  @media screen and (max-width: 560px) {
+    display: block;
+  }
+}
+.menu {
+  margin-right: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  @media screen and (max-width: 560px) {
+    display: none;
+  }
+}
 .menuToggleButton {
   align-self: center;
   background: none;
