@@ -29,7 +29,9 @@ const Header = () => {
         })}
       </div>
       <div className={styles.menu}>
-        <Button variant="contained">Köp</Button>
+        <Button size={"small"} variant="contained">
+          Köp
+        </Button>
       </div>
     </nav>
   );
