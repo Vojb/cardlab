@@ -23,7 +23,7 @@
 }
 .drawerMobile {
   display: none;
-  @media screen and (max-width: 560px) {
+  @media screen and (max-width: 650px) {
     display: block;
   }
 }
@@ -34,7 +34,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  @media screen and (max-width: 560px) {
+  @media screen and (max-width: 650px) {
     display: none;
   }
 }

@@ -5,25 +5,63 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 interface Props {
   title: string;
   body: string;
   buttonText?: string;
+  icon?: string;
 }
-const BasicCard = ({ title, body, buttonText = "" }: Props) => {
+import styles from "./basic-card-info.module.scss";
+const BasicCard = ({ title, body, buttonText = "", icon }: Props) => {
   return (
-    <Card sx={{ width: 375, minHeight: 150 }}>
+    <Card className={styles.basicCardRoot}>
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {title}
-        </Typography>
+        <div
+          style={{
+            display: "flex",
+            flex: 1,
+            marginBottom: 24,
+            justifyContent: "center",
+          }}
+        >
+          <img style={{ height: 35 }} src={icon} alt="first image" />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flex: 1,
+            marginBottom: 24,
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            sx={{ fontSize: "large", fontWeight: "bold" }}
+            color="text.primary"
+            gutterBottom
+          >
+            {title}
+          </Typography>
+        </div>
 
-        <Typography variant="body2">{body}</Typography>
+        <Typography sx={{ textAlign: "center" }} variant="body2">
+          {body}
+        </Typography>
       </CardContent>
       {buttonText.length > 1 && (
         <CardActions>
-          <Button size="small">{buttonText}</Button>
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+              marginBottom: 24,
+              justifyContent: "center",
+            }}
+          >
+            <Button size="small" variant="contained" color="secondary">
+              {buttonText}
+            </Button>
+          </div>
         </CardActions>
       )}
     </Card>
