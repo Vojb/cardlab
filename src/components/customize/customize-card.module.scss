@@ -45,3 +45,8 @@ textarea {
     flex-direction: column;
   }
 }
+.chipsFlex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

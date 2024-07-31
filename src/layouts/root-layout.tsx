@@ -5,6 +5,7 @@ import React, { PropsWithChildren, useEffect } from "react";
 import { initDB } from "../components/indexedDb";
 import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../components/header/header";
+import Footer from "../components/footer/footer";
 const RootLayout = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -12,8 +13,9 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   }, []);
   return (
     <div className={styles.rootLayout}>
-      <Header></Header>
+      <Header />
       <Outlet />
+      <Footer />
     </div>
   );
 };

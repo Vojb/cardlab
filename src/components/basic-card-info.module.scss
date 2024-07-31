@@ -1,0 +1,19 @@
+.basicCardRoot {
+  background-color: #f1f2f3 !important;
+
+  width: 325px;
+  min-height: 250px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media screen and (max-width: 650px) {
+    width: auto;
+  }
+
+  &:hover {
+    transform: translateY(-10px);
+    background-color: white !important;
+
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}

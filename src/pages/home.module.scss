@@ -2,9 +2,8 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-
   .hero {
-    @media screen and (max-width: 560px) {
+    @media screen and (max-width: 650px) {
       background-size: cover;
       background-position: center;
       height: 300px;
@@ -26,11 +25,12 @@
     flex-direction: row;
     gap: 24px;
     margin: 24px;
-    @media screen and (max-width: 560px) {
+    @media screen and (max-width: 650px) {
       flex-direction: column;
       flex: 1;
       min-height: 0;
       justify-content: space-evenly;
+      margin: 24px;
       align-items: center;
     }
   }

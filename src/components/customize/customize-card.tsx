@@ -4,6 +4,7 @@ import ShowCard, { Card, Team } from "../show-card/show-card";
 import "../../App.scss";
 import {
   Button,
+  Chip,
   IconButton,
   Input,
   TextField,
@@ -279,6 +280,33 @@ const CustomizeCard: React.FC<Props> = () => {
             variant="filled"
             onChange={(e) => setCollectNumber(e.target.value)}
           />
+          <div className={styles.chipsFlex}>
+            {[
+              "Snabb",
+              "Stark",
+              "Kvicktänkt",
+              "Klinisk",
+              "Snabba reflexer",
+              "Teknisk",
+            ].map((item, index) => {
+              return (
+                <Chip
+                  color={"secondary"}
+                  label={item}
+                  onClick={() => {
+                    setDescription(description + " " + item);
+                  }}
+                />
+              );
+            })}
+            <Chip
+              color={"error"}
+              label={"Töm"}
+              onClick={() => {
+                setDescription("");
+              }}
+            />
+          </div>
           <div style={{ display: "flex", gap: 24, flexDirection: "row" }}>
             <textarea
               value={description}
