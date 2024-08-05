@@ -12,7 +12,7 @@ export default defineConfig({
     VitePWA({
       includeAssets: [faviconURL, fcmdark, fcm],
       manifest: {
-        name: "CardLab",
+        name: "Kortlabbet",
         theme_color: "#ffffff",
         icons: [
           {
