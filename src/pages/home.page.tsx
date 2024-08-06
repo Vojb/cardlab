@@ -21,7 +21,17 @@ const HomePage = () => {
         style={{
           backgroundImage: `url(${heroBg})`,
         }}
-      ></div>
+      >
+        <div className={styles.heroText}>
+          <h1>Beställ ditt eget lags samlarkort</h1>
+          <p>
+            Skapa dina egna unika samlarkort här hos oss på Kortlabbet! Ge dina
+            vänner och familj en personlig present att minnas, föreviga ditt
+            fotbollslag och skapa minnen för livet till nära och kära!
+          </p>
+          <Button variant={"contained"}>Upptäck </Button>
+        </div>
+      </div>
       <div className={styles.carousel}>
         <BasicCard
           icon={printer}

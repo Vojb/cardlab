@@ -3,6 +3,9 @@
   flex-direction: column;
   min-height: 0;
   .hero {
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: flex-start;
     @media screen and (max-width: 650px) {
       background-size: cover;
       background-position: center;
@@ -17,6 +20,49 @@
       height: 700px;
       background-size: cover;
       background-position: center;
+    }
+    .heroText {
+      align-self: flex-start;
+      flex: 1;
+
+      @media screen and (max-width: 650px) {
+        padding-top: 24px;
+        max-width: 200px;
+        margin-left: 24px;
+        align-self: flex-start;
+        overflow: auto;
+      }
+      @media screen and (min-width: 560px) {
+        padding-top: 32px;
+        margin-left: 32px;
+        max-width: 280px;
+      }
+      @media screen and (min-width: 980px) {
+        padding-top: 32px;
+        margin-left: 162px;
+        max-width: 290px;
+      }
+      h1 {
+        font-size: xxx-large;
+        line-height: 1.2em;
+        font-weight: 900;
+
+        @media screen and (max-width: 650px) {
+          font-size: large;
+        }
+        @media screen and (min-width: 560px) {
+          font-size: x-large;
+        }
+        @media screen and (min-width: 980px) {
+          font-size: xxx-large;
+        }
+      }
+      p {
+        font-weight: 300;
+        @media screen and (max-width: 650px) {
+          font-size: smaller;
+        }
+      }
     }
   }
   .carousel {
