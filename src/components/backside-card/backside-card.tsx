@@ -15,12 +15,14 @@ const BacksideCard: React.FC<Props> = ({ card }) => {
         <div className={styles.logo}>
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </div>
+
         <div className={styles.textContainer}>
           <span className={styles.name}>
             {card?.name?.replace(/\b\w/g, (char) => char.toUpperCase())}
           </span>
           <span className={styles.origin}>{card.origin}</span>
         </div>
+
         <div className={styles.collectNumber}>
           Samlarbild Nr.{card.collectNumber}
         </div>
@@ -34,7 +36,7 @@ const BacksideCard: React.FC<Props> = ({ card }) => {
           </div>
         </div>
         <div className={styles.bottomContent}>
-          <div className={styles.clubName}>{card.team?.name} 2024</div>
+          <div className={styles.clubName}>{card.team?.name} 2025</div>
           <div className={styles.clubOrigin}>{card.team?.origin}</div>
         </div>
       </div>
