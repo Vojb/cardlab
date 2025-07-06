@@ -1,0 +1,78 @@
+.rootShowCard {
+  width: var(--card-width);
+  height: var(--card-height);
+  background-color: #eceee0;
+  position: relative;
+
+  .rootCard {
+    height: var(--card-height);
+    width: var(--card-width);
+    padding: 10px 12px;
+    display: flex;
+    .logo {
+      position: absolute;
+      z-index: 1;
+      left: 20px;
+      top: 34px;
+      img {
+        height: 44px;
+      }
+    }
+    .cardRoot {
+      flex: 1 0 0;
+      min-height: 0;
+      display: flex;
+      margin: 12px;
+      justify-content: space-between;
+      flex-direction: column;
+      .cardPhoto {
+        position: relative;
+        color: #2c2c2c;
+        text-align: center;
+        align-self: flex-end;
+
+        span {
+          position: absolute;
+          right: 12px;
+          -webkit-text-stroke: 0.5px #100e09;
+          text-shadow: 0px 0px 1px #fbf5b3, 0px 0px 2px #fbf5b3,
+            0px 0px 3px #fbf5b3, 0px 0px 4px #fbf5b3;
+          font-size: 14px;
+          font-weight: bold;
+          color: #100e09;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          bottom: 12px;
+        }
+        img {
+          display: flex;
+          border: 4px solid #100e09;
+          object-fit: cover;
+          margin-bottom: 6px;
+          width: var(--image-width);
+          height: var(--image-height);
+        }
+      }
+
+      .cardNameContainer {
+        display: flex;
+        align-items: center;
+        border: 0.15rem solid #100e09;
+        height: 24px;
+        justify-content: center;
+        align-content: center;
+        color: #100e09;
+        background-color: #fbf5b3;
+        span {
+          text-align: center;
+          width: 100%;
+          font-weight: 600;
+          font-size: 14px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}

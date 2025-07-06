@@ -1,6 +1,7 @@
 import React, { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import styles from "./customize-card.module.scss";
 import ShowCard, { Card, Team } from "../show-card/show-card";
+import PresetCardSelector from "../show-card/preset-card-selector";
 import "../../App.scss";
 import {
   Button,
@@ -9,6 +10,10 @@ import {
   Input,
   TextField,
   TextareaAutosize,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { toPng } from "html-to-image";
 import BacksideCard from "../backside-card/backside-card";
@@ -22,6 +27,7 @@ interface DeckItem {
   frontPng: string;
   backPng: string;
   cardData: Card;
+  presetType: number;
 }
 
 export const fileToDataString = (file: File) => {
@@ -47,7 +53,7 @@ const CustomizeCard: React.FC<Props> = () => {
   const [previewImgUrl, setPreviewimgUrl] = useState("");
   const imageRef = useRef<HTMLImageElement | null>(null);
   const [deck, setDeck] = useState<
-    { frontPng: string; backPng: string; cardData: Card }[]
+    { frontPng: string; backPng: string; cardData: Card; presetType: number }[]
   >([]);
   const [team, setTeam] = useState<Team>({
     name: "FC Möllan",
@@ -56,6 +62,7 @@ const CustomizeCard: React.FC<Props> = () => {
     country: "Sverige",
     division: "Division 5",
   });
+  const [selectedPreset, setSelectedPreset] = useState<number>(1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +71,12 @@ const CustomizeCard: React.FC<Props> = () => {
       const duplicates = new Set<string>();
       data.forEach(async (item) => {
         if (!duplicates.has(item.value.cardData.collectNumber)) {
-          list.push(item.value);
+          // Handle legacy cards that don't have presetType
+          const deckItem = {
+            ...item.value,
+            presetType: item.value.presetType || 1,
+          };
+          list.push(deckItem);
           duplicates.add(item.value.cardData.collectNumber);
         } else {
           await deleteCard(item.key);
@@ -152,6 +164,7 @@ const CustomizeCard: React.FC<Props> = () => {
                       frontPng: dataUrl,
                       backPng: dataUrlBackside,
                       cardData: newCard,
+                      presetType: selectedPreset,
                     };
                     setDeck(updatedDeck);
                   } else {
@@ -161,6 +174,7 @@ const CustomizeCard: React.FC<Props> = () => {
                         frontPng: dataUrl,
                         backPng: dataUrlBackside,
                         cardData: newCard,
+                        presetType: selectedPreset,
                       },
                     ]);
                   }
@@ -180,6 +194,7 @@ const CustomizeCard: React.FC<Props> = () => {
                       frontPng: dataUrl,
                       backPng: dataUrlBackside,
                       cardData: newCard,
+                      presetType: selectedPreset,
                     },
                   });
                 })
@@ -280,6 +295,19 @@ const CustomizeCard: React.FC<Props> = () => {
             variant="filled"
             onChange={(e) => setCollectNumber(e.target.value)}
           />
+          <FormControl fullWidth variant="filled">
+            <InputLabel>Kort Design</InputLabel>
+            <Select
+              value={selectedPreset}
+              label="Kort Design"
+              onChange={(e) => setSelectedPreset(e.target.value as number)}
+            >
+              <MenuItem value={1}>Design 1 - Klassisk</MenuItem>
+              <MenuItem value={2}>Design 2 - Modern</MenuItem>
+              <MenuItem value={3}>Design 3 - Retro</MenuItem>
+              <MenuItem value={4}>Design 4 - Minimalistisk</MenuItem>
+            </Select>
+          </FormControl>
           <div className={styles.chipsFlex}>
             {[
               "Snabb",
@@ -338,12 +366,14 @@ const CustomizeCard: React.FC<Props> = () => {
           </Button>
         </div>
         <div className={styles.cardsContainer}>
-          <ShowCard
+          <PresetCardSelector
             ref={elementRef}
+            presetType={selectedPreset}
             card={{
               position: position !== "" ? position : "MV",
               name: name,
               image: previewImgUrl,
+              team: team,
             }}
           />
           <div ref={elementRef1}>
@@ -374,6 +404,7 @@ const CustomizeCard: React.FC<Props> = () => {
                     setDescription(card.description ?? "");
                     setPreviewimgUrl(card.image);
                     setName(card.name ?? "");
+                    setSelectedPreset(item.presetType || 1);
                   }
                 }}
               />

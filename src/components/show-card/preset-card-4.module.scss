@@ -1,0 +1,93 @@
+.rootShowCard {
+  width: var(--card-width);
+  height: var(--card-height);
+  background: #ffffff;
+  position: relative;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+
+  .rootCard {
+    height: var(--card-height);
+    width: var(--card-width);
+    padding: 10px 12px;
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+
+    .logo {
+      position: absolute;
+      z-index: 1;
+      left: 20px;
+      top: 34px;
+
+      img {
+        height: 44px;
+        opacity: 0.8;
+      }
+    }
+
+    .cardRoot {
+      flex: 1 0 0;
+      min-height: 0;
+      display: flex;
+      margin: 12px;
+      justify-content: space-between;
+      flex-direction: column;
+      margin-top: 0;
+      box-sizing: border-box;
+
+      .cardPhoto {
+        position: relative;
+        color: #2c2c2c;
+        text-align: center;
+        align-self: flex-end;
+
+        span {
+          position: absolute;
+          right: 12px;
+          font-size: 14px;
+          font-weight: bold;
+          color: #666;
+          bottom: 12px;
+          background: rgba(255, 255, 255, 0.9);
+          padding: 2px 6px;
+          border-radius: 4px;
+        }
+
+        img {
+          display: flex;
+          border: 1px solid #e0e0e0;
+          object-fit: cover;
+          margin-bottom: 6px;
+          width: var(--image-width);
+          height: var(--image-height);
+          border-radius: 4px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .cardNameContainer {
+        display: flex;
+        align-items: center;
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+        height: 24px;
+        justify-content: center;
+        align-content: center;
+
+        span {
+          font-weight: 600;
+          font-size: 14px;
+          color: #333;
+          text-shadow: none;
+          letter-spacing: 0.5px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}
