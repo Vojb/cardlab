@@ -1,3 +1,28 @@
+.cardContainer {
+  position: relative;
+  display: inline-block;
+}
+
 .cardImage {
   border: 2px solid rgb(137, 216, 247);
+}
+
+.removeButton {
+  position: absolute !important;
+  top: -8px !important;
+  right: -8px !important;
+  background-color: #f44336 !important;
+  color: white !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  z-index: 10;
+
+  &:hover {
+    background-color: #d32f2f !important;
+  }
+
+  .MuiSvgIcon-root {
+    font-size: 14px;
+  }
 }

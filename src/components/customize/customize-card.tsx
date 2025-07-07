@@ -15,15 +15,27 @@ import {
   Select,
   MenuItem,
   Checkbox,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import { toPng } from "html-to-image";
 import BacksideCard from "../backside-card/backside-card";
 import SmallCard from "../small-card/small-card";
 import JSZip from "jszip";
 import "react-image-crop/dist/ReactCrop.css";
-import { addCard, deleteAllCards, deleteCard, getAllCards } from "../indexedDb";
+import {
+  addCard,
+  deleteAllCards,
+  deleteCard,
+  getAllCards,
+  importData,
+  clearAllData,
+  exportDataWithoutImages,
+} from "../indexedDb";
 import { sendMessageToAssistant } from "../../api/open-ai/open-api";
 import { OpenAiSvg } from "../../assets/svg/open-ai";
+import { Upload } from "@mui/icons-material";
+
 interface DeckItem {
   frontPng: string;
   backPng: string;
@@ -70,31 +82,53 @@ const CustomizeCard: React.FC<Props> = () => {
     division: "Division 5",
   });
   const [selectedPreset, setSelectedPreset] = useState<number>(1);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info";
+  }>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllCards();
       const list: DeckItem[] = [];
       const duplicates = new Set<string>();
-      data.forEach(async (item) => {
-        if (!duplicates.has(item.value.cardData.collectNumber)) {
+      const toDelete: string[] = [];
+
+      // First pass: identify duplicates and build the list
+      data.forEach((item) => {
+        const formattedNumber = formatCollectNumber(
+          item.value.cardData.collectNumber
+        );
+        if (!duplicates.has(formattedNumber)) {
           // Handle legacy cards that don't have presetType
           const deckItem = {
             ...item.value,
             cardData: {
               ...item.value.cardData,
-              collectNumber: formatCollectNumber(
-                item.value.cardData.collectNumber
-              ),
+              collectNumber: formattedNumber,
             },
             presetType: item.value.presetType || 1,
           };
           list.push(deckItem);
-          duplicates.add(item.value.cardData.collectNumber);
+          duplicates.add(formattedNumber);
         } else {
-          await deleteCard(item.key);
+          // Mark for deletion
+          toDelete.push(item.key);
         }
       });
+
+      // Second pass: delete duplicates
+      for (const key of toDelete) {
+        if (key) {
+          await deleteCard(key);
+        }
+      }
 
       setDeck(list);
     };
@@ -118,22 +152,145 @@ const CustomizeCard: React.FC<Props> = () => {
     }
   };
 
+  const handleImportFileChange: ChangeEventHandler<HTMLInputElement> = async (
+    event
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImportFile(file);
+    }
+  };
+
+  const handleImportData = async () => {
+    if (!importFile) {
+      setSnackbar({
+        open: true,
+        message: "Välj en fil att importera",
+        severity: "error",
+      });
+      return;
+    }
+
+    try {
+      const text = await importFile.text();
+      const data = JSON.parse(text);
+
+      // Validate the import data structure
+      if (!data.cards && !data.teams) {
+        throw new Error(
+          "Ogiltig filformat. Filen måste innehålla kort eller lag data."
+        );
+      }
+
+      // Clear existing data and import new data
+      await clearAllData();
+      await importData(data);
+
+      // Refresh the deck display
+      const newData = await getAllCards();
+      const list: DeckItem[] = [];
+      const duplicates = new Set<string>();
+      const toDelete: string[] = [];
+
+      // First pass: identify duplicates and build the list
+      newData.forEach((item) => {
+        const formattedNumber = formatCollectNumber(
+          item.value.cardData.collectNumber
+        );
+        if (!duplicates.has(formattedNumber)) {
+          const deckItem = {
+            ...item.value,
+            cardData: {
+              ...item.value.cardData,
+              collectNumber: formattedNumber,
+            },
+            presetType: item.value.presetType || 1,
+          };
+          list.push(deckItem);
+          duplicates.add(formattedNumber);
+        } else {
+          // Mark for deletion
+          toDelete.push(item.key);
+        }
+      });
+
+      // Second pass: delete duplicates
+      for (const key of toDelete) {
+        if (key) {
+          await deleteCard(key);
+        }
+      }
+
+      setDeck(list);
+      setImportFile(null);
+
+      setSnackbar({
+        open: true,
+        message: `Import lyckades! ${data.cards?.length || 0} kort och ${
+          data.teams?.length || 0
+        } lag importerades.`,
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Import error:", error);
+      setSnackbar({
+        open: true,
+        message: `Import misslyckades: ${
+          error instanceof Error ? error.message : "Okänt fel"
+        }`,
+        severity: "error",
+      });
+    }
+  };
+
   const generatePngs = async () => {
     try {
       if (elementRef.current) {
         const tasks = [
-          toPng(elementRef.current, { quality: 10, pixelRatio: 10 }),
-          toPng(elementRef.current, { quality: 10, pixelRatio: 10 }),
-          toPng(elementRef.current, { quality: 10, pixelRatio: 10 }),
-          toPng(elementRef.current, { quality: 10, pixelRatio: 10 }),
+          toPng(elementRef.current, {
+            quality: 10,
+            pixelRatio: 10,
+            skipFonts: true,
+          }),
+          toPng(elementRef.current, {
+            quality: 10,
+            pixelRatio: 10,
+            skipFonts: true,
+          }),
+          toPng(elementRef.current, {
+            quality: 10,
+            pixelRatio: 10,
+            skipFonts: true,
+          }),
+          toPng(elementRef.current, {
+            quality: 10,
+            pixelRatio: 10,
+            skipFonts: true,
+          }),
         ];
 
         if (elementRef1.current) {
           tasks.push(
-            toPng(elementRef1.current, { quality: 10, pixelRatio: 10 }),
-            toPng(elementRef1.current, { quality: 10, pixelRatio: 10 }),
-            toPng(elementRef1.current, { quality: 10, pixelRatio: 10 }),
-            toPng(elementRef1.current, { quality: 10, pixelRatio: 10 })
+            toPng(elementRef1.current, {
+              quality: 10,
+              pixelRatio: 10,
+              skipFonts: true,
+            }),
+            toPng(elementRef1.current, {
+              quality: 10,
+              pixelRatio: 10,
+              skipFonts: true,
+            }),
+            toPng(elementRef1.current, {
+              quality: 10,
+              pixelRatio: 10,
+              skipFonts: true,
+            }),
+            toPng(elementRef1.current, {
+              quality: 10,
+              pixelRatio: 10,
+              skipFonts: true,
+            })
           );
         }
 
@@ -146,7 +303,32 @@ const CustomizeCard: React.FC<Props> = () => {
     }
   };
 
-  const addToDeck = () => {
+  const addToDeck = async () => {
+    // Check if collection number already exists in database
+    const allCards = await getAllCards();
+    const existingCard = allCards.find(
+      (item) =>
+        formatCollectNumber(item.value.cardData.collectNumber) ===
+        formatCollectNumber(collectNumber)
+    );
+
+    if (
+      existingCard &&
+      !deck.some(
+        (item) =>
+          item.cardData.collectNumber === formatCollectNumber(collectNumber)
+      )
+    ) {
+      setSnackbar({
+        open: true,
+        message: `Samlar nummer ${formatCollectNumber(
+          collectNumber
+        )} finns redan i databasen`,
+        severity: "error",
+      });
+      return;
+    }
+
     generatePngs().then(() => {
       if (elementRef1.current) {
         toPng(elementRef1.current, {
@@ -165,7 +347,7 @@ const CustomizeCard: React.FC<Props> = () => {
                   const newCard: Card = {
                     name: name,
                     image: previewImgUrl,
-                    collectNumber: collectNumber,
+                    collectNumber: formatCollectNumber(collectNumber),
                     origin: origin,
                     description: description,
                     position: position,
@@ -199,18 +381,22 @@ const CustomizeCard: React.FC<Props> = () => {
                       },
                     ]);
                   }
-                  setCollectNumber(
-                    String(
-                      Number.isNaN(Number(collectNumber))
-                        ? 1
-                        : Number(collectNumber) + 1
-                    ).padStart(6, "0")
-                  );
+                  // Get next available collection number
+                  const nextNumber = getNextAvailableCollectionNumber([
+                    ...deck,
+                    {
+                      frontPng: dataUrl,
+                      backPng: dataUrlBackside,
+                      cardData: newCard,
+                      presetType: selectedPreset,
+                    },
+                  ]);
+                  setCollectNumber(nextNumber);
                   setDescription("");
                   setSelectedImage(null);
                   setPreviewimgUrl("");
                   await addCard({
-                    id: collectNumber,
+                    id: formatCollectNumber(collectNumber),
                     value: {
                       frontPng: dataUrl,
                       backPng: dataUrlBackside,
@@ -231,6 +417,69 @@ const CustomizeCard: React.FC<Props> = () => {
     });
   };
 
+  const removeCard = async (cardToRemove: Card) => {
+    try {
+      // Remove from database
+      await deleteCard(cardToRemove.collectNumber);
+
+      // Remove from local state
+      const updatedDeck = deck.filter(
+        (item) => item.cardData.collectNumber !== cardToRemove.collectNumber
+      );
+      setDeck(updatedDeck);
+
+      // If the removed card was selected, clear the form
+      if (cardToRemove.collectNumber === collectNumber) {
+        setName("");
+        setPosition("");
+        setOrigin("");
+        setDescription("");
+        setSelectedImage(null);
+        setPreviewimgUrl("");
+        // Set to next available collection number
+        const nextNumber = getNextAvailableCollectionNumber(updatedDeck);
+        setCollectNumber(nextNumber);
+      }
+
+      setSnackbar({
+        open: true,
+        message: `Kort ${cardToRemove.collectNumber} borttaget`,
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error removing card:", error);
+      setSnackbar({
+        open: true,
+        message: "Fel vid borttagning av kort",
+        severity: "error",
+      });
+    }
+  };
+
+  const getNextAvailableCollectionNumber = (
+    currentDeck: DeckItem[]
+  ): string => {
+    if (currentDeck.length === 0) {
+      return "000001";
+    }
+
+    // Get all collection numbers and sort them
+    const collectionNumbers = currentDeck
+      .map((item) => parseInt(item.cardData.collectNumber || "0", 10))
+      .sort((a, b) => a - b);
+
+    // Find the first gap or use the next number after the highest
+    let expectedNumber = 1;
+    for (const num of collectionNumbers) {
+      if (num !== expectedNumber) {
+        break;
+      }
+      expectedNumber++;
+    }
+
+    return formatCollectNumber(expectedNumber);
+  };
+
   const downloadAllAsZip = () => {
     const zip = new JSZip();
 
@@ -240,16 +489,20 @@ const CustomizeCard: React.FC<Props> = () => {
 
     // Add each card PNG to the respective folder in the zip file
     deck.forEach((item, index) => {
-      frontFolder?.file(
-        `card-${item.cardData.collectNumber}-front.png`,
-        item.frontPng.split("data:image/png;base64,")[1],
-        { base64: true }
-      );
-      backFolder?.file(
-        `card-${item.cardData.collectNumber}-back.png`,
-        item.backPng.split("data:image/png;base64,")[1],
-        { base64: true }
-      );
+      try {
+        frontFolder?.file(
+          `card-${item.cardData.collectNumber}-front.png`,
+          item.frontPng.split("data:image/png;base64,")[1],
+          { base64: true }
+        );
+        backFolder?.file(
+          `card-${item.cardData.collectNumber}-back.png`,
+          item.backPng.split("data:image/png;base64,")[1],
+          { base64: true }
+        );
+      } catch (error) {
+        console.error("Error adding card to zip:", error);
+      }
     });
 
     // Generate the zip file and trigger download
@@ -260,6 +513,27 @@ const CustomizeCard: React.FC<Props> = () => {
       link.download = "cards.zip";
       link.click();
     });
+  };
+
+  const downloadDataWithoutImages = async () => {
+    try {
+      const exportData = await exportDataWithoutImages();
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(dataBlob);
+      link.download = "cards-data-without-images.json";
+      link.click();
+    } catch (error) {
+      console.error("Error downloading data without images:", error);
+      setSnackbar({
+        open: true,
+        message: "Fel vid export av data utan bilder",
+        severity: "error",
+      });
+    }
   };
 
   return (
@@ -355,6 +629,7 @@ const CustomizeCard: React.FC<Props> = () => {
             ].map((item, index) => {
               return (
                 <Chip
+                  key={index}
                   color={"secondary"}
                   label={item}
                   onClick={() => {
@@ -364,6 +639,7 @@ const CustomizeCard: React.FC<Props> = () => {
               );
             })}
             <Chip
+              key="clear"
               color={"error"}
               label={"Töm"}
               onClick={() => {
@@ -379,27 +655,55 @@ const CustomizeCard: React.FC<Props> = () => {
             <IconButton
               disabled={description.length < 1}
               onClick={() => {
-                sendMessageToAssistant(name + "" + description).then(
-                  (response) => {
-                    setDescription(response ?? description);
-                  }
-                );
+                sendMessageToAssistant(
+                  "namn: " +
+                    name +
+                    " , beskrivande egenskaper: " +
+                    description +
+                    " , position: " +
+                    position
+                ).then((response) => {
+                  setDescription(response ?? description);
+                });
               }}
             >
               <OpenAiSvg />
             </IconButton>
           </div>
 
-          <Button
-            disabled={previewImgUrl === ""}
-            type="button"
-            variant="outlined"
-            onClick={addToDeck}
-          >
-            {deck.some((item) => item.cardData.collectNumber === collectNumber)
-              ? "Uppdatera"
-              : "Lägg till"}
-          </Button>
+          <div style={{ display: "flex", gap: 12 }}>
+            <Button
+              disabled={previewImgUrl === ""}
+              type="button"
+              variant="outlined"
+              onClick={addToDeck}
+            >
+              {deck.some(
+                (item) => item.cardData.collectNumber === collectNumber
+              )
+                ? "Uppdatera"
+                : "Lägg till"}
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                // Clear form fields
+                setName("");
+                setPosition("");
+                setOrigin("");
+                setDescription("");
+                setSelectedImage(null);
+                setPreviewimgUrl("");
+                // Advance to next available collection number
+                const nextNumber = getNextAvailableCollectionNumber(deck);
+                setCollectNumber(nextNumber);
+              }}
+            >
+              Nästa Spelare
+            </Button>
+          </div>
         </div>
         <div className={styles.cardsContainer}>
           <PresetCardSelector
@@ -433,6 +737,7 @@ const CustomizeCard: React.FC<Props> = () => {
                 key={index}
                 png={item.frontPng}
                 cardData={item.cardData}
+                onRemove={removeCard}
                 onClick={(card) => {
                   if (card != null) {
                     setPosition(card.position ?? "");
@@ -449,7 +754,14 @@ const CustomizeCard: React.FC<Props> = () => {
               />
             ))}
           </div>
-          <div style={{ display: "flex", flexDirection: "row", gap: 24 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 24,
+              flexWrap: "wrap",
+            }}
+          >
             <Button
               disabled={deck.length === 0}
               type="button"
@@ -474,9 +786,62 @@ const CustomizeCard: React.FC<Props> = () => {
             >
               Ladda hem kort
             </Button>
+            <Button
+              disabled={deck.length === 0}
+              type="button"
+              variant="outlined"
+              onClick={downloadDataWithoutImages}
+            >
+              Export data utan bilder
+            </Button>
+
+            {/* Import Section */}
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <Button
+                variant="outlined"
+                startIcon={<Upload />}
+                component="label"
+                style={{ minWidth: "120px" }}
+              >
+                {importFile
+                  ? importFile.name.substring(0, 20) +
+                    (importFile.name.length > 20 ? "..." : "")
+                  : "Välj fil"}
+                <input
+                  type="file"
+                  accept=".json"
+                  style={{ display: "none" }}
+                  onChange={handleImportFileChange}
+                />
+              </Button>
+              <Button
+                disabled={!importFile}
+                variant="contained"
+                onClick={handleImportData}
+                style={{ minWidth: "100px" }}
+              >
+                Importera
+              </Button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Notification Snackbar */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
