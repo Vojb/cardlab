@@ -14,6 +14,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Checkbox,
 } from "@mui/material";
 import { toPng } from "html-to-image";
 import BacksideCard from "../backside-card/backside-card";
@@ -42,6 +43,7 @@ export const fileToDataString = (file: File) => {
 interface Props {}
 
 const CustomizeCard: React.FC<Props> = () => {
+  const [showDottedLine, setShowDottedLine] = useState(false);
   const elementRef = useRef<HTMLDivElement>(null);
   const elementRef1 = useRef<HTMLDivElement>(null);
   const [name, setName] = useState("");
@@ -136,10 +138,18 @@ const CustomizeCard: React.FC<Props> = () => {
   const addToDeck = () => {
     generatePngs().then(() => {
       if (elementRef1.current) {
-        toPng(elementRef1.current, { quality: 10, pixelRatio: 10 })
+        toPng(elementRef1.current, {
+          quality: 10,
+          pixelRatio: 10,
+          skipFonts: true,
+        })
           .then((dataUrlBackside) => {
             if (elementRef.current) {
-              toPng(elementRef.current, { quality: 10, pixelRatio: 10 })
+              toPng(elementRef.current, {
+                quality: 10,
+                pixelRatio: 10,
+                skipFonts: true,
+              })
                 .then(async (dataUrl) => {
                   const newCard: Card = {
                     name: name,
@@ -266,7 +276,12 @@ const CustomizeCard: React.FC<Props> = () => {
               />
             </Button>
           </div>
-
+          <div>
+            <Checkbox
+              checked={showDottedLine}
+              onChange={() => setShowDottedLine(!showDottedLine)}
+            />
+          </div>
           <TextField
             fullWidth
             label="Position"
@@ -306,6 +321,9 @@ const CustomizeCard: React.FC<Props> = () => {
               <MenuItem value={2}>Design 2 - Modern</MenuItem>
               <MenuItem value={3}>Design 3 - Retro</MenuItem>
               <MenuItem value={4}>Design 4 - Minimalistisk</MenuItem>
+              <MenuItem value={5}>Design 5 - Retro FCM Bar</MenuItem>
+              <MenuItem value={6}>Design 6 - Image only</MenuItem>
+              <MenuItem value={7}>Design 7</MenuItem>
             </Select>
           </FormControl>
           <div className={styles.chipsFlex}>
@@ -367,6 +385,7 @@ const CustomizeCard: React.FC<Props> = () => {
         </div>
         <div className={styles.cardsContainer}>
           <PresetCardSelector
+            showDottedLine={showDottedLine}
             ref={elementRef}
             presetType={selectedPreset}
             card={{

@@ -1,13 +1,19 @@
 body {
   font-family: "Nunito Sans", sans-serif;
 }
+
+/* Prevent CORS issues with external fonts during image generation */
+* {
+  font-display: swap;
+}
+
 :root {
   --card-width: 232px;
   --card-height: 316px;
   --mobile-width: 600px;
 
-  --image-width: 170px;
-  --image-height: 242px;
+  --image-width: 155px;
+  --image-height: 232px;
   /* Variables divided by 4 */
   --small-card-width: 58px; /* 232px / 4 */
   --small-card-height: 79px; /* 316px / 4 */

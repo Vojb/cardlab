@@ -1,0 +1,179 @@
+.rootShowCard {
+  width: var(--card-width);
+  height: var(--card-height);
+  background-color: #eceee0;
+  position: relative;
+
+  .dottedLine {
+    // keep as in preset 1 if any
+  }
+
+  .rootCard {
+    height: var(--card-height);
+    width: var(--card-width);
+    padding: 10px 12px;
+    display: flex;
+    position: relative;
+    .flagWrapper {
+      position: absolute;
+      z-index: 4;
+      left: 20px;
+      top: 34px;
+      .fcmFlag {
+        width: 44px;
+        height: 28px;
+        border: 2px solid #111;
+        display: flex;
+        flex-direction: row;
+        box-sizing: border-box;
+        .redStripe {
+          background: #b71c1c;
+          height: 100%;
+          width: 7px;
+        }
+        .blackStripe {
+          background: #111;
+          height: 100%;
+          width: 7px;
+        }
+      }
+    }
+    .cardRoot {
+      flex: 1 0 0;
+      min-height: 0;
+      display: flex;
+      margin: 12px;
+      justify-content: space-between;
+      flex-direction: column;
+      position: relative;
+      .fcmVertical {
+        position: absolute;
+
+        top: 80px;
+        transform: translateY(-50%);
+        font-family: "nimbusmonolot-regular", sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: 2px;
+        color: #111;
+        line-height: 1.1;
+        text-align: center;
+        user-select: none;
+      }
+      .cardPhoto {
+        position: relative;
+        color: #2c2c2c;
+        text-align: center;
+        align-self: flex-end;
+        img {
+          display: flex;
+          border: 2px solid #100e09;
+          object-fit: cover;
+          margin-bottom: 6px;
+          width: var(--image-width);
+          height: var(--image-height);
+          position: relative;
+          z-index: 1;
+        }
+
+        // Vintage overlay effect
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(
+            45deg,
+            rgba(139, 69, 19, 0.3) 0%,
+            rgba(160, 82, 45, 0.2) 25%,
+            rgba(210, 180, 140, 0.15) 50%,
+            rgba(139, 69, 19, 0.25) 75%,
+            rgba(160, 82, 45, 0.3) 100%
+          );
+          pointer-events: none;
+          z-index: 2;
+          border: 2px solid #100e09;
+          margin-bottom: 6px;
+          width: var(--image-width);
+          height: var(--image-height);
+          box-sizing: border-box;
+        }
+
+        // Additional texture overlay for more vintage feel
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 1px,
+              rgba(0, 0, 0, 0.08) 1px,
+              rgba(0, 0, 0, 0.08) 2px
+            ),
+            repeating-linear-gradient(
+              -45deg,
+              transparent,
+              transparent 1px,
+              rgba(255, 255, 255, 0.05) 1px,
+              rgba(255, 255, 255, 0.05) 2px
+            ),
+            radial-gradient(
+              circle at 20% 80%,
+              rgba(0, 0, 0, 0.12) 1px,
+              transparent 1px
+            ),
+            radial-gradient(
+              circle at 80% 20%,
+              rgba(0, 0, 0, 0.12) 1px,
+              transparent 1px
+            ),
+            radial-gradient(
+              circle at 40% 40%,
+              rgba(255, 255, 255, 0.08) 1px,
+              transparent 1px
+            ),
+            radial-gradient(
+              ellipse at 30% 70%,
+              rgba(0, 0, 0, 0.08) 0%,
+              transparent 50%
+            );
+          background-size: 3px 3px, 4px 4px, 6px 6px, 8px 8px, 5px 5px,
+            100% 100%;
+          pointer-events: none;
+          z-index: 3;
+          border: 2px solid #100e09;
+          margin-bottom: 6px;
+          width: var(--image-width);
+          height: var(--image-height);
+          box-sizing: border-box;
+        }
+      }
+      .cardNameContainer {
+        display: flex;
+        align-items: center;
+        border: 1px solid #100e09;
+        height: 24px;
+        justify-content: center;
+        align-content: center;
+        color: #100e09;
+        background-color: #fbf5b3;
+        span {
+          text-align: center;
+          width: 100%;
+          font-weight: 600;
+          font-size: 14px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: block;
+        }
+      }
+    }
+  }
+}

@@ -30,4 +30,14 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    cors: true,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 });
