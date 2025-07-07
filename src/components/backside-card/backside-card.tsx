@@ -20,12 +20,10 @@ const BacksideCard: React.FC<Props> = ({ card }) => {
           <span className={styles.name}>
             {card?.name?.replace(/\b\w/g, (char) => char.toUpperCase())}
           </span>
-          <span className={styles.origin}>{card.origin}</span>
+          <span className={styles.origin}>#{card.collectNumber}</span>
         </div>
 
-        <div className={styles.collectNumber}>
-          Samlarbild Nr.{card.collectNumber}
-        </div>
+        <div className={styles.collectNumber}></div>
 
         <div className={styles.descriptionContainer}>
           <div className={styles.clublocation}>

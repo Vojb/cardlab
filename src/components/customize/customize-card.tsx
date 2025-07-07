@@ -40,6 +40,11 @@ export const fileToDataString = (file: File) => {
   });
 };
 
+const formatCollectNumber = (number: string | number): string => {
+  const num = typeof number === "string" ? parseInt(number, 10) : number;
+  return String(num).padStart(6, "0");
+};
+
 interface Props {}
 
 const CustomizeCard: React.FC<Props> = () => {
@@ -49,7 +54,7 @@ const CustomizeCard: React.FC<Props> = () => {
   const [name, setName] = useState("");
   const [position, setPosition] = useState("");
   const [origin, setOrigin] = useState("");
-  const [collectNumber, setCollectNumber] = useState("1");
+  const [collectNumber, setCollectNumber] = useState("000001");
   const [description, setDescription] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImgUrl, setPreviewimgUrl] = useState("");
@@ -76,6 +81,12 @@ const CustomizeCard: React.FC<Props> = () => {
           // Handle legacy cards that don't have presetType
           const deckItem = {
             ...item.value,
+            cardData: {
+              ...item.value.cardData,
+              collectNumber: formatCollectNumber(
+                item.value.cardData.collectNumber
+              ),
+            },
             presetType: item.value.presetType || 1,
           };
           list.push(deckItem);
@@ -193,7 +204,7 @@ const CustomizeCard: React.FC<Props> = () => {
                       Number.isNaN(Number(collectNumber))
                         ? 1
                         : Number(collectNumber) + 1
-                    )
+                    ).padStart(6, "0")
                   );
                   setDescription("");
                   setSelectedImage(null);
@@ -308,7 +319,14 @@ const CustomizeCard: React.FC<Props> = () => {
             label="Samlar nummer"
             value={collectNumber}
             variant="filled"
-            onChange={(e) => setCollectNumber(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "" || /^\d+$/.test(value)) {
+                setCollectNumber(
+                  value === "" ? "000001" : formatCollectNumber(value)
+                );
+              }
+            }}
           />
           <FormControl fullWidth variant="filled">
             <InputLabel>Kort Design</InputLabel>
@@ -400,7 +418,7 @@ const CustomizeCard: React.FC<Props> = () => {
               card={{
                 name: name !== "" ? name : "Spelarens namn",
                 image: previewImgUrl,
-                collectNumber: collectNumber !== "" ? collectNumber : "1",
+                collectNumber: collectNumber !== "" ? collectNumber : "000001",
                 origin: origin !== "" ? origin : "Malmö",
                 team: team,
                 description:
@@ -419,7 +437,9 @@ const CustomizeCard: React.FC<Props> = () => {
                   if (card != null) {
                     setPosition(card.position ?? "");
                     setOrigin(card.origin ?? "");
-                    setCollectNumber(card.collectNumber ?? "");
+                    setCollectNumber(
+                      formatCollectNumber(card.collectNumber ?? "1")
+                    );
                     setDescription(card.description ?? "");
                     setPreviewimgUrl(card.image);
                     setName(card.name ?? "");
