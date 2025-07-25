@@ -17,9 +17,7 @@ const BacksideCard: React.FC<Props> = ({ card }) => {
         </div>
 
         <div className={styles.textContainer}>
-          <span className={styles.name}>
-            {card?.name?.replace(/\b\w/g, (char) => char.toUpperCase())}
-          </span>
+          <span className={styles.name}>{card?.name?.toWellFormed()}</span>
           <span className={styles.origin}>#{card.collectNumber}</span>
         </div>
 
