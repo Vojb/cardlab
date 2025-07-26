@@ -17,7 +17,7 @@ const BacksideCard: React.FC<Props> = ({ card }) => {
         </div>
 
         <div className={styles.textContainer}>
-          <span className={styles.name}>{card?.name?.toWellFormed()}</span>
+          <span className={styles.name}>{card?.name}</span>
           <span className={styles.origin}>#{card.collectNumber}</span>
         </div>
 
