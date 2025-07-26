@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 export const menuItems = [
   { text: "Hem", icon: <Home />, navigate: "/" },
   { text: "Skapa kort", icon: <CardGiftcard />, navigate: "/create-card" },
-  { text: "Skapa lag", icon: <Terminal />, navigate: "/create-team" },
+  // { text: "Skapa lag", icon: <Terminal />, navigate: "/create-team" },
   { text: "Om oss", icon: <MailIcon />, navigate: "/" },
   { text: "FAQ", icon: <FormatQuoteSharp />, navigate: "/" },
   { text: "Kontakt", icon: <DraftsRounded />, navigate: "/" },
